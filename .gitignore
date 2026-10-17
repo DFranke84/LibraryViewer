@@ -2,6 +2,7 @@
 # data/ (built from your own library) and the build caches never do.
 /*
 !/.gitignore
+!/.gitattributes
 !/*.bat
 !/*.md
 !/index.html
