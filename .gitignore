@@ -15,4 +15,5 @@
 
 /_build/*
 !/_build/*.py
+!/_build/*.ps1
 __pycache__/

@@ -19,7 +19,12 @@ echo.
 echo  Copy the Research Library to an SD card
 echo  ---------------------------------------
 echo  Put the SD card in the PC first.
-echo  The library and viewer need about 100 GB (incl. the 8.6 GB North America road map); with the offline archives about 265 GB (use a 512 GB card).
+echo  Measuring the library...
+rem sizes of what is copied (whole GB, rounded up) and the largest single file - FAT32 cards cannot hold files over 4 GB
+set "LIBGB=0" & set "LIBMAX=0" & set "ZIMGB=0" & set "ZIMMAX=0"
+for /f "usebackq tokens=1-4" %%A in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0_build\card_sizes.ps1" -Lib "%LIB%" -Zim "%ZIM%" -Viewer "%VIEW%"`) do (set "LIBGB=%%A" & set "LIBMAX=%%B" & set "ZIMGB=%%C" & set "ZIMMAX=%%D")
+echo  The library and viewer need about %LIBGB% GB on the card.
+if exist "%ZIM%\*.zim" echo  The offline archives would add about %ZIMGB% GB.
 echo.
 set "D=%~1"
 if "%D%"=="" set /p "D=Drive letter of the SD card (for example F): "
@@ -31,7 +36,7 @@ if /i "%~d0"=="%D%:" (echo That is the drive the library is on - choose the SD c
 if not exist "%D%:\" (echo There is no drive %D%: - check the letter in File Explorer. & pause & exit /b 1)
 
 set "ARCH=%~2"
-if "%ARCH%"=="" if exist "%ZIM%\*.zim" set /p "ARCH=Also copy the offline archives for the Kiwix app (about 164 GB)? Type Y or N: "
+if "%ARCH%"=="" if exist "%ZIM%\*.zim" set /p "ARCH=Also copy the offline archives for the Kiwix app (about %ZIMGB% GB)? Type Y or N: "
 if "%ARCH%"=="" set "ARCH=N"
 
 rem the card's file system and free space
@@ -41,15 +46,17 @@ for /f "usebackq delims=" %%F in (`powershell -NoProfile -Command "(Get-Volume -
 for /f "usebackq delims=" %%G in (`powershell -NoProfile -Command "[math]::Floor((Get-PSDrive %D%).Free/1GB)"`) do set "FREE=%%G"
 echo.
 echo  Card %D%: file system %FS%, %FREE% GB free.
-if /i "%FS%"=="FAT32" (
+set "MAXGB=%LIBMAX%"
+if /i "%ARCH%"=="Y" if %ZIMMAX% GTR %MAXGB% set "MAXGB=%ZIMMAX%"
+if /i "%FS%"=="FAT32" if %MAXGB% GEQ 4 (
   echo.
-  echo  This card is formatted FAT32, which cannot hold files bigger than 4 GB - the North America map is one 8.5 GB file, Wikipedia one 119 GB file.
+  echo  This card is formatted FAT32, which cannot hold files bigger than 4 GB - the largest file to copy is about %MAXGB% GB.
   echo  Re-format the card as exFAT first ^(this erases it^) - Windows: right-click the card, Format, File system exFAT.
   pause
   exit /b 1
 )
-set "NEED=100"
-if /i "%ARCH%"=="Y" set "NEED=265"
+set /a NEED=LIBGB+1
+if /i "%ARCH%"=="Y" set /a NEED=LIBGB+ZIMGB+1
 if defined FREE if %FREE% LSS %NEED% (
   echo  Note: a first copy needs about %NEED% GB. If the card already holds an earlier copy, less is needed.
 )
@@ -64,7 +71,7 @@ set /p "OK=Type Y and press Enter to start: "
 if /i not "%OK%"=="Y" exit /b 0
 echo.
 echo Copying the library (the first time this takes a long while)...
-robocopy "%LIB%" "%D%:\Research" /MIR /FFT /R:1 /W:1 /NDL /NP /XD "%LIB%\_sources" "%LIB%\_work" "%LIB%\_scripts" /XF "Setup.bat" "Library Manager.vbs"
+robocopy "%LIB%" "%D%:\Research" /MIR /FFT /R:1 /W:1 /NDL /NP /XD "%LIB%\_sources" "%LIB%\_work" "%LIB%\_scripts" "%LIB%\starter" /XF "Setup.bat" "Library Manager.vbs" "Get Archives.bat" "Build Starter Library.bat"
 if %ERRORLEVEL% GEQ 8 (echo. & echo Copying the library had errors - see above. & pause & exit /b 1)
 echo.
 echo Copying the viewer...
@@ -73,7 +80,7 @@ if %ERRORLEVEL% GEQ 8 (echo. & echo Copying the viewer had errors - see above. &
 if /i "%ARCH%"=="Y" (
   echo.
   echo Copying the offline archives ^(the first time this takes several hours^)...
-  robocopy "%ZIM%" "%D%:\Kiwix" /MIR /FFT /R:1 /W:1 /NDL /XF "*.done" "*.part" "*.tmp"
+  robocopy "%ZIM%" "%D%:\Kiwix" /MIR /FFT /R:1 /W:1 /NDL /XF "*.done" "*.part" "*.tmp" "*.bad"
   if errorlevel 8 (echo. & echo Copying the archives had errors - see above. & pause & exit /b 1)
 )
 echo.
