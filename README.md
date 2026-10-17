@@ -65,9 +65,9 @@ tells you how much it needs).
 
 ## Parts built for one person's setup
 
-The **Cooking School**, **Local Area** and **Waypoints** sections mirror the Library Manager sections of the same
-names. They were built for the first owner's own cooking course and home area (Kalispell, Montana: plants, wildlife,
-topographic maps and a North America road map) and stay empty in a new library.
+The **Local Area** and **Waypoints** sections mirror the Library Manager sections of the same names. They were
+built for the first owner's home area (Kalispell, Montana: plants, wildlife, topographic maps and a North America
+road map); the viewer only shows them when the library has something for them.
 
 ---
 

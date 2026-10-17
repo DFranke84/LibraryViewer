@@ -40,7 +40,7 @@ const TYPE_NAMES = { 'repair-guide': 'Repair guide', 'q-and-a': 'Q & A', 'wikipe
   'email-recipe': 'Email recipe', document: 'Document', 'wiki-book': 'Book', video: 'Video', 'facebook-post': 'Facebook recipe',
   'course-module': 'Module overview', course: 'Course', 'recipe-card': 'Recipe card', audio: 'Audio lesson', 'lesson-video': 'Lesson video',
   'local-profile': 'Plant', 'local-wildlife': 'Wildlife', 'local-reference': 'Reference', 'local-pest': 'Pest / problem',
-  'growing-guide': 'Growing guide', 'local-overview': 'Overview', 'local-guide': 'Kalispell guide', 'local-map': 'Map' };
+  'growing-guide': 'Growing guide', 'local-overview': 'Overview', 'local-guide': 'Local guide', 'local-map': 'Map' };
 const TYPE_ICON = { video: '▶', pdf: '📕', document: '📄', 'wiki-book': '📖', 'repair-guide': '🔧', 'q-and-a': '💬', 'species-profile': '🌿',
   'web-recipe': '🍲', 'email-recipe': '✉', 'facebook-post': '🍲', 'recipe-card': '🗂', course: '🎓', 'course-module': '🎓', audio: '🎧',
   'lesson-video': '▶' };
@@ -263,7 +263,7 @@ function addContext(batch, gridEl, terms) {
 const SECTIONS = {
   recipes: { title: 'Recipes', icon: '🍲', sub: 'Every recipe - web bookmarks, emails, Facebook saves, recipe cards, videos and cookbooks.',
     base: i => i.c === 'recipes' && i.g !== 'course', chips: null, topics: true, unit: 'recipe' },
-  local: { title: 'Local Area', icon: '⛰', sub: 'Kalispell / Flathead County: pick a topic - plants with key facts for zone 5b, vegetables, Montana wildlife, insects, fungi, nearby species, food preservation, wildlife, wood heat, livestock, maps, guides and pest pages.',
+  local: { title: 'Local Area', icon: '⛰', sub: 'Your local area: pick a topic - plants, wildlife, growing guides, maps and more',
     base: i => i.c === 'local-area', chips: null, topics: true, unit: 'page' },
   docs: { title: 'Documents & Books', icon: '📚', sub: 'PDFs, Word documents and books from every category. Open one to read it or flip through its pages.',
     base: i => DOC_TYPES.has(i.ty) && !isCourse(i), cat: true, chips: null, topics: true, unit: 'document' },
@@ -532,14 +532,24 @@ async function showMap(reader, box, url, m, focus) {
 }
 
 // ===================================================================== navigation (sidebar)
+// Sections that only some libraries have (a course, a local area, maps) are left out when this library has none.
+function hasSection(key) {
+  switch (key) {
+    case 'course': return ITEMS.some(isCourse);
+    case 'waypoints': return !!(Geo.d && (Geo.d.waypoints.length || Geo.d.maps.length));
+    case 'browse:recipes': case 'browse:local': case 'browse:docs': return ITEMS.some(SECTIONS[key.slice(7)].base);
+    default: return true;
+  }
+}
 const Nav = {
   build() {
     const n = $('#nav');
     const link = (href, ic, label, key) => h('a', { href, 'data-key': key }, h('span', { class: 'ic' }, ic), label, h('span', { class: 'n', 'data-count': key }));
+    const links = [['#/browse/recipes', '🍲', 'Recipes', 'browse:recipes'], ['#/course', '🎓', 'Cooking School', 'course'],
+      ['#/browse/local', '⛰', 'Local Area', 'browse:local'], ['#/waypoints', '📍', 'Waypoints', 'waypoints'], ['#/browse/docs', '📚', 'Documents & Books', 'browse:docs'],
+      ['#/browse/library', '🗂', 'Whole Library', 'browse:library']].filter(l => hasSection(l[3]));
     n.append(link('#/', '⌂', 'Home', 'home'), h('div', { class: 'grp' }, 'BROWSE'), link('#/favorites', '★', 'Favorites', 'favorites'),
-      link('#/browse/recipes', '🍲', 'Recipes', 'browse:recipes'), link('#/course', '🎓', 'Cooking School', 'course'),
-      link('#/browse/local', '⛰', 'Local Area', 'browse:local'), link('#/waypoints', '📍', 'Waypoints', 'waypoints'), link('#/browse/docs', '📚', 'Documents & Books', 'browse:docs'),
-      link('#/browse/library', '🗂', 'Whole Library', 'browse:library'));
+      ...links.map(l => link(...l)));
     n.addEventListener('click', e => { if (e.target.closest('a')) document.body.classList.remove('drawer'); });
     $('#menu').onclick = () => document.body.classList.toggle('drawer');
     $('#scrim').onclick = () => document.body.classList.remove('drawer');
@@ -566,17 +576,17 @@ class HomeView {
     const panel = h('div', { class: 'panel hero' },
       h('div', { class: 'search' }, h('span', {}, '🔍'), q, h('button', { class: 'btn primary', onclick: go }, 'Search')),
       h('div', { class: 'stats' }, ...[[items.length, 'items in the library'], [by.recipes, 'recipes'], [docs, 'documents & books'],
-        [lessons, 'Cooking School lessons'], [Object.keys(Favs.d).length, 'favorites']].map(([n, t]) => h('div', {}, h('b', {}, fmt(n)), h('span', {}, t)))));
+        ...(lessons ? [[lessons, 'Cooking School lessons']] : []), [Object.keys(Favs.d).length, 'favorites']].map(([n, t]) => h('div', {}, h('b', {}, fmt(n)), h('span', {}, t)))));
     this.el.append(panel);
     const cont = continueLink();
     const tiles = h('div', { class: 'tiles' },
-      ...[['#/browse/recipes', '🍲', 'Recipes', fmt(ITEMS.filter(SECTIONS.recipes.base).length) + ' recipes'],
-        ['#/course', '🎓', 'Cooking School', fmt(lessons) + ' lessons & audio'],
-        ['#/browse/local', '⛰', 'Local Area', fmt(ITEMS.filter(SECTIONS.local.base).length) + ' Kalispell pages'],
-        ['#/browse/docs', '📚', 'Documents & Books', fmt(docs) + ' documents'],
+      ...[['#/browse/recipes', '🍲', 'Recipes', fmt(ITEMS.filter(SECTIONS.recipes.base).length) + ' recipes', 'browse:recipes'],
+        ['#/course', '🎓', 'Cooking School', fmt(lessons) + ' lessons & audio', 'course'],
+        ['#/browse/local', '⛰', 'Local Area', fmt(ITEMS.filter(SECTIONS.local.base).length) + ' pages', 'browse:local'],
+        ['#/browse/docs', '📚', 'Documents & Books', fmt(docs) + ' documents', 'browse:docs'],
         ['#/browse/library', '🗂', 'Whole Library', fmt(items.length) + ' items'],
         ['#/favorites', '★', 'Favorites', fmt(Object.keys(Favs.d).length) + ' starred']]
-        .map(([href, ic, t, s]) => h('a', { class: 'stile', href }, h('span', { class: 'ic' }, ic), h('div', {}, h('b', {}, t), h('span', {}, s)))));
+        .filter(t => hasSection(t[4])).map(([href, ic, t, s]) => h('a', { class: 'stile', href }, h('span', { class: 'ic' }, ic), h('div', {}, h('b', {}, t), h('span', {}, s)))));
     this.el.append(h('h2', { class: 'sec' }, 'Browse'), cont || '', tiles);
     const recent = [...items].sort((a, b) => (b.mt || 0) - (a.mt || 0)).slice(0, 12);
     this.el.append(h('h2', { class: 'sec' }, 'Recently added'), h('div', { class: 'grid small' }, recent.map(it => card(it, { small: true }))));

@@ -3,11 +3,10 @@
 A read-only copy of Library Manager's **browse and read** side that runs in Chrome on an Android tablet, straight from an SD card, with **no internet and no PC**.
 
 What it does:
-- **Sections:** Home, Favorites, Recipes, Cooking School (in course order), Local Area, Waypoints, Documents & Books, Whole Library. Cooking School, Local Area and Waypoints were built for the first owner's own course and home area and stay empty in a new library. Recipes, Documents & Books, Whole Library and Local Area open on the **same topic tiles as Library Manager** (built from the app's own tile definitions, so they always match after "Build viewer data.bat"); ◀ All topics or Back returns to the tiles.
+- **Sections:** Home, Favorites, Recipes, Local Area, Waypoints, Documents & Books, Whole Library (sections the library has nothing for are left out). Recipes, Documents & Books, Whole Library and Local Area open on the **same topic tiles as Library Manager** (built from the app's own tile definitions, so they always match after "Build viewer data.bat"); ◀ All topics or Back returns to the tiles.
 - **Full-text search:** every word of every page, not just titles. All the words you type must appear. The last word also finds longer words that start with it, so results show up as you type. Matching words are highlighted on the cards.
 - **Reader tabs:** Read (the page), Pictures (swipe through the photos), Pages (the original PDF), and Note (the PC's note, plus a box for your own tablet note). Videos and audio play right in the page. A−/A+ changes the text size.
 - **Favorites and tablet notes:** saved on the tablet. Favorites start with the PC's on first launch. *Favorites → 📝 Notes* lists all your notes. *Save favorites & notes to a file* makes a backup, and that file is also how notes get to the PC.
-- **Cooking School:** Next/Previous walk the course in order, a ✓ marks what you've opened, and "Continue" takes you back to where you left off.
 - **Back:** the tablet's Back button (or ← Back) returns to the list exactly where you were.
 - **Light/dark:** ◐ switches between automatic, light and dark.
 
@@ -20,7 +19,7 @@ Adding and deleting still happens in **Library Manager on the PC**.
 | | |
 |---|---|
 | `index.html`, `app.js`, `app.css`, `config.js`, `vendor/` | the viewer itself |
-| `data/` | made by the build: item list, Cooking School order, search index and card pictures (from a few MB for a small library to a few hundred MB for a large one) |
+| `data/` | made by the build: item list, search index and card pictures (from a few MB for a small library to a few hundred MB for a large one) |
 | `Build viewer data.bat` | rebuilds `data/` from the library. Run it after you add or delete things in Library Manager |
 | `Preview on PC.bat` | opens the viewer in this PC's browser so you can try it |
 | `Import tablet notes.bat` | copies notes typed on the tablet into the library's notes (see below) |
@@ -56,7 +55,7 @@ Chrome on Android can't run this viewer straight from the card's files, so a fre
 
 Each time after that, start the server app, then tap the icon.
 
-> **Keep the same port number.** Favorites and Cooking School progress are saved for that exact address. If the port changes, use *Save favorites to a file* / *Load favorites from a file* on the Favorites page to move them.
+> **Keep the same port number.** Favorites are saved for that exact address. If the port changes, use *Save favorites to a file* / *Load favorites from a file* on the Favorites page to move them.
 
 ---
 
@@ -117,10 +116,10 @@ To try it on the PC: double-click **`Preview on PC.bat`**. It opens `http://loca
 ---
 
 ## Technical notes
-- `_build/build_viewer.py` runs with the library's own Python (`Research\_scripts\.venv`) and reuses Library Manager's code (`library_viewer.py`). Item titles, recipe groups, Cooking School order, pictures and notes therefore match the PC app.
+- `_build/build_viewer.py` runs with the library's own Python (`Research\_scripts\.venv`) and reuses Library Manager's code (`library_viewer.py`). Item titles, recipe groups, pictures and notes therefore match the PC app.
 - Card pictures are made once into `data/thumbs` (320×208). Reruns only make the missing ones. Items with no picture are listed in `_build/thumb_none.json`; delete that file to retry them.
 - Search index: `data/search/*.json`, one small file per two- or three-letter word beginning. It loads only what each search needs.
-- Favorites (`lv.favs`), tablet notes (`lv.notes`) and course progress (`lv.course`) are kept in Chrome's storage for the viewer's address.
+- Favorites (`lv.favs`) and tablet notes (`lv.notes`) are kept in Chrome's storage for the viewer's address.
 - Offline libraries in `vendor/`: marked 12.0.2 (Markdown) and pdf.js 3.11.174 (PDF pages).
 
 ## Offline archives on the tablet (Kiwix)
