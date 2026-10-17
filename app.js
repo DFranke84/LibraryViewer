@@ -315,7 +315,8 @@ const Geo = {
   },
   fmt(lat, lon) { return lat.toFixed(5) + ', ' + lon.toFixed(5); },
   link(m, q) { return '#/item/' + m.id + '?' + q; },
-  // the offline North America road map (a page inside the library folder; it links back here)
+  // the offline North America road map (a page inside the library folder; it links back here) - only some libraries have it
+  hasNA() { return ITEMS.some(i => i.p.endsWith('/north-america-map.md')); },
   naURL(lat, lon, name) {
     const q = new URLSearchParams({ src: 'tablet', viewer: location.pathname.replace(/[^/]*$/, '') });
     if (lat != null) { q.set('lat', lat.toFixed(6)); q.set('lon', lon.toFixed(6)); if (name) q.set('name', name); }
@@ -334,7 +335,8 @@ const Geo = {
     try {
       const c = await this.locate(); await this.load();
       const { detail, regional } = this.mapsAt(c.latitude, c.longitude), m = detail || regional;
-      if (!m) location.href = this.naURL(c.latitude, c.longitude, `You are here (±${Math.round(c.accuracy)} m)`);   // off the topo maps: the road map
+      if (!m && this.hasNA()) location.href = this.naURL(c.latitude, c.longitude, `You are here (±${Math.round(c.accuracy)} m)`);   // off the topo maps: the road map
+      else if (!m) alert(`You are at ${this.fmt(c.latitude, c.longitude)} - not on any of the library's maps.`);
       else location.hash = this.link(m, 'here=' + c.latitude.toFixed(6) + ',' + c.longitude.toFixed(6) + '&acc=' + Math.round(c.accuracy));
     } catch (e) { alert(e.message); }
     finally { btn.disabled = false; btn.textContent = old; }
@@ -354,7 +356,7 @@ class WaypointsView {
       '“Where am I?” uses the tablet’s GPS - no internet needed.'),
       h('div', { class: 'rbtns', style: { marginBottom: '14px' } }, here, h('a', { class: 'btn', href: '#/browse/local?topic=' +
         Math.max(0, ((INFO.topics || {}).local || []).findIndex(t => t.n === 'Maps')) }, '🗺 All maps'),
-        h('a', { class: 'btn', href: Geo.naURL() }, '🌎 North America map')));
+        Geo.hasNA() ? h('a', { class: 'btn', href: Geo.naURL() }, '🌎 North America map') : ''));
     const wps = [...d.waypoints].sort((a, b) => natural(a.name, b.name));
     if (!wps.length) { el.append(h('p', { class: 'empty' }, 'No waypoints yet - add them in Library Manager on the PC (📍 Waypoints).')); return; }
     const list = h('div', { class: 'wplist' });
@@ -398,7 +400,7 @@ async function showMap(reader, box, url, m, focus) {
     h('b', {}, 'On the map'),
     h('ul', {}, h('li', {}, '📍 Where am I? - your GPS position on this map'),
       h('li', {}, '📏 Measure - tap points: each leg’s straight-line distance and the total'),
-      h('li', {}, '🌎 North America map (above) - the same spot on the road map')),
+      Geo.hasNA() ? h('li', {}, '🌎 North America map (above) - the same spot on the road map') : ''),
     h('div', { class: 'sub', style: { margin: 0 } }, 'Tap this card to close it.'));
   const mStrip = h('div', { class: 'mstrip', hidden: true }, mTotal,
     h('div', { class: 'rbtns' }, mUndo, mClear, h('button', { class: 'btn primary', onclick: () => measureToggle(false) }, 'Done')));
@@ -517,7 +519,8 @@ async function showMap(reader, box, url, m, focus) {
       if (!Geo.inside(m, you.lat, you.lon)) {
         const o = Geo.mapsAt(you.lat, you.lon), other = o.detail || o.regional;
         if (other && confirm('You are not on this map. Open the map you are on?')) { location.hash = Geo.link(other, `here=${you.lat.toFixed(6)},${you.lon.toFixed(6)}&acc=${you.acc}`); return; }
-        if (!other && confirm(`You are at ${Geo.fmt(you.lat, you.lon)} - not on any topo map in the library. Open the North America road map there?`)) {
+        if (!other && !Geo.hasNA()) alert(`You are at ${Geo.fmt(you.lat, you.lon)} - not on any of the library's maps.`);
+        else if (!other && confirm(`You are at ${Geo.fmt(you.lat, you.lon)} - not on any topo map in the library. Open the North America road map there?`)) {
           location.href = Geo.naURL(you.lat, you.lon, `You are here (±${you.acc} m)`); return; }
         you = null; return;
       }
@@ -1088,7 +1091,7 @@ class ReaderView {
       const f = this.focus, o = f ? Geo.mapsAt(f.lat, f.lon) : {}, other = Geo.map(it).set === 'detail' ? o.regional : o.detail;
       if (f && other) btns.append(h('a', { class: 'btn', href: Geo.link(other, f.here ? `here=${f.lat},${f.lon}&acc=${f.acc}` : 'wp=' + f.id) },
         'Same spot on the ' + (other.set === 'detail' ? 'detailed' : 'regional') + ' map'));
-      btns.append(h('button', { class: 'btn', onclick: () => {   // the road map at the same spot
+      if (Geo.hasNA()) btns.append(h('button', { class: 'btn', onclick: () => {   // the road map at the same spot
         const m = Geo.map(it), v = this.mapView && this.mapView();   // the middle of the screen, if the Pages tab is showing
         const p = f ? [f.lat, f.lon] : v ? Geo.fromPage(m, v[0], v[1]) : [(m.s + m.n) / 2, (m.w + m.e) / 2];
         location.href = Geo.naURL(p[0], p[1], f ? (f.here ? 'You were here' : f.name) : it.t.replace(/ - USGS .*/, '') + (v ? ' (centre of the view)' : ' (centre of the sheet)'));

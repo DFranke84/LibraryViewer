@@ -63,11 +63,12 @@ tells you how much it needs).
 - **Offline archives** (Wikipedia, iFixit and other `.zim` files from the library) can go on the card too and
   are read with the free Kiwix app.
 
-## Parts built for one person's setup
+## Local Area and Waypoints
 
-The **Local Area** and **Waypoints** sections mirror the Library Manager sections of the same names. They were
-built for the first owner's home area (Kalispell, Montana: plants, wildlife, topographic maps and a North America
-road map); the viewer only shows them when the library has something for them.
+The **Local Area** and **Waypoints** sections mirror the Library Manager sections of the same names. They show
+once the library has a Local Area - made for your own town with the Research library's `Build Local Area.bat`
+(weather and frost dates, plants and wildlife seen nearby, and in the US topographic maps). On the tablet, Waypoints
+can also show where you are from the tablet's GPS.
 
 ---
 
