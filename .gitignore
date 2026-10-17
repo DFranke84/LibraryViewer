@@ -1,0 +1,17 @@
+# Whitelist: only the viewer's code, launchers and guide go in git.
+# data/ (built from your own library) and the build caches never do.
+/*
+!/.gitignore
+!/*.bat
+!/*.md
+!/index.html
+!/app.js
+!/app.css
+!/config.js
+!/icon.svg
+!/vendor/
+!/_build/
+
+/_build/*
+!/_build/*.py
+__pycache__/

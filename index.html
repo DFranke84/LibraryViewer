@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3a2e">
+<title>Research Library</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css?v=2026-10-13h">
+</head>
+<body>
+<div id="app">
+  <aside id="side" aria-label="Sections">
+    <div class="brand"><span class="logo">📚</span><div><b>Research Library</b><small id="built"></small></div></div>
+    <nav id="nav"></nav>
+    <div class="side-foot"><a href="#/help">? How to use</a></div>
+  </aside>
+  <div id="scrim"></div>
+  <div id="mainwrap">
+    <header id="topbar">
+      <button id="menu" class="icon-btn" aria-label="Menu">☰</button>
+      <h1 id="ptitle">Research Library</h1>
+      <button id="theme" class="icon-btn" aria-label="Light or dark">◐</button>
+    </header>
+    <main id="view"><div class="loading" id="boot">Loading the library…</div></main>
+  </div>
+</div>
+<div id="lightbox" hidden>
+  <div class="lb-bar">
+    <button class="lb-btn" data-lb="close">✕ Close</button>
+    <span id="lb-count"></span>
+    <a class="lb-btn" id="lb-full" target="_blank" rel="noopener">Full size</a>
+  </div>
+  <div class="lb-stage"><button class="lb-nav prev" data-lb="prev" aria-label="Previous">‹</button><img id="lb-img" alt=""><button class="lb-nav next" data-lb="next" aria-label="Next">›</button></div>
+  <div id="lb-cap"></div>
+</div>
+<button id="totop" hidden aria-label="Back to top">▲</button>
+<script src="vendor/marked.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js?v=2026-10-13h"></script>
+</body>
+</html>
