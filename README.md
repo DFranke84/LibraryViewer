@@ -101,3 +101,8 @@ The viewer never changes anything in the Research folder.
 
 **Full tablet guide** - the web-server app, keeping the tablet up to date, notes, maps, offline archives and
 troubleshooting: [README - Tablet Viewer.md](README%20-%20Tablet%20Viewer.md).
+
+## License
+
+Free to use, change and share under the [MIT License](LICENSE). The bundled `vendor\` libraries (PDF.js, marked)
+keep their own open-source licenses.
