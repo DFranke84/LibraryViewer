@@ -3,6 +3,8 @@
 Your Research library on an **Android tablet**, with no internet and no PC: browse by topic, search every word,
 read pages, PDFs and pictures, play videos, keep favorites and notes. It runs in Chrome straight from an SD card.
 
+▶ **[Watch the feature tour on YouTube](https://youtu.be/wOhPy0c1FPk)** - Library Manager and this tablet viewer (the tablet part is near the end).
+
 It is a **read-only** copy of Library Manager's browse-and-read side. Adding and deleting things still happens
 in Library Manager on the PC; the viewer is refreshed from it with one double-click.
 
