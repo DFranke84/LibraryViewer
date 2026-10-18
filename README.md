@@ -6,6 +6,16 @@ read pages, PDFs and pictures, play videos, keep favorites and notes. It runs in
 It is a **read-only** copy of Library Manager's browse-and-read side. Adding and deleting things still happens
 in Library Manager on the PC; the viewer is refreshed from it with one double-click.
 
+## What it looks like
+
+<table>
+<tr><td width="50%"><img src="docs/images/viewer-home.png" alt="Home on the tablet"><br><sub>Home on the tablet</sub></td><td width="50%"><img src="docs/images/viewer-local-area.png" alt="Local Area tiles"><br><sub>Local Area tiles</sub></td></tr>
+<tr><td width="50%"><img src="docs/images/viewer-species.png" alt="A species page"><br><sub>A species page</sub></td><td width="50%"><img src="docs/images/viewer-recipe.jpg" alt="A recipe with its video"><br><sub>A recipe with its video</sub></td></tr>
+<tr><td width="50%"><img src="docs/images/viewer-search.png" alt="Search every word of every page"><br><sub>Search every word of every page</sub></td><td width="50%"><img src="docs/images/viewer-phone.png" alt="On a small screen"><br><sub>On a small screen</sub></td></tr>
+</table>
+
+*Pictures from a demo library built from scratch with these tools (starter-pack samples, a few recipes, a Local Area for Asheville, NC).*
+
 ---
 
 ## How the apps fit together
@@ -49,6 +59,9 @@ tells you how much it needs).
 4. **Put it on the tablet:** `Copy to SD card.bat` copies the library and the viewer to the card, then a free
    "web server" app on the tablet shows it in Chrome. Step by step:
    **[README - Tablet Viewer.md](README%20-%20Tablet%20Viewer.md)**.
+
+
+**Testing a fresh install?** [TESTING.md](TESTING.md) is a step-by-step checklist for setting all the apps up from scratch in a test folder - no experience needed.
 
 ---
 

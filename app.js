@@ -1,6 +1,6 @@
 /* Research Library - tablet web viewer (read-only).
    Data comes from data/*.json (made by _build/build_viewer.py); the library's own files are read straight from the
-   library folder next to this one. Favorites and Cooking School progress are kept in this browser (localStorage). */
+   library folder next to this one. Favorites and notes are kept in this browser (localStorage). */
 'use strict';
 
 // ===================================================================== small helpers
@@ -1010,14 +1010,13 @@ To <b>add</b> or <b>delete</b> things, use Library Manager on the PC, then rebui
 <h3>Finding things</h3>
 <ul><li><b>Search</b> looks through every word of every page, not just titles. All the words you type must appear. The last word also
 finds longer words that start with it, so results show up while you type. Choose <i>Sort: Best match</i> to see the closest matches first.</li>
-<li>The sections in the menu (☰) work like Library Manager's: <b>Recipes</b>, <b>Cooking School</b>, <b>Local Area</b>, <b>Documents &amp; Books</b> and the <b>Whole Library</b>.
+<li>The sections in the menu (☰) work like Library Manager's: <b>Recipes</b>, <b>Local Area</b>, <b>Documents &amp; Books</b> and the <b>Whole Library</b>.
 Recipes, Documents &amp; Books, Whole Library and Local Area open on the same <b>topic tiles</b> as Library Manager - tap one, then use its buttons to narrow the list; <b>◀ All topics</b> or Back returns to the tiles.</li></ul>
 <h3>Reading</h3>
 <ul><li>Tap a card to open it. The <b>Read</b> tab shows the page, <b>Pictures</b> shows every photo (swipe or use the arrows), <b>Pages</b> shows the original PDF,
 <b>Note</b> shows the PC's note and has a box for your own tablet note (saved as you type).</li>
 <li>Videos and audio play right in the page. <b>A−</b>/<b>A+</b> changes the text size.</li>
-<li>The tablet's Back button (or ← Back) returns to the list exactly where you were.</li>
-<li>In the Cooking School, <b>Next</b>/<b>Previous</b> walk through the course in order, and a ✓ marks what you have opened.</li></ul>
+<li>The tablet's Back button (or ← Back) returns to the list exactly where you were.</li></ul>
 <h3>Favorites</h3>
 <p>Tap ☆ to star anything. Favorites are kept in this browser on this tablet. They started with the PC's favorites. Use
 <i>Save favorites &amp; notes to a file</i> on the Favorites page to keep a backup.</p>
