@@ -8,6 +8,7 @@
 !/*.bat
 !/*.md
 !/LICENSE
+!/VERSION
 !/index.html
 !/app.js
 !/app.css
