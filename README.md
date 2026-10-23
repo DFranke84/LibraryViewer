@@ -5,7 +5,7 @@ read pages, PDFs and pictures, play videos, keep favorites and notes. It runs in
 
 ▶ **[Watch the feature tour on YouTube](https://youtu.be/wOhPy0c1FPk)** - Library Manager and this tablet viewer (the tablet part is near the end).
 
-**Install or update the whole suite:** [AI Research Suite](https://github.com/DFranke84/AI-Research-Suite) is the one place to install and update this app and its companions. Its **Check for updates** keeps every piece current without touching your chats, models or library. A one-click Windows installer (Suite-Setup.exe) that asks which pieces you want, shows the space and download time, and sets everything up is coming there next - until then, use the setup steps below.
+**Easiest way to install: [Suite-Setup.exe](https://github.com/DFranke84/AI-Research-Suite/releases/latest)** - one download that asks which pieces you want (this app and its companions), shows the space and download time, and sets everything up on Windows. It also keeps every piece up to date (**Check for updates**) without touching your chats, models or library. Prefer doing it by hand? Use the setup steps below.
 
 It is a **read-only** copy of Library Manager's browse-and-read side. Adding and deleting things still happens
 in Library Manager on the PC; the viewer is refreshed from it with one double-click.
